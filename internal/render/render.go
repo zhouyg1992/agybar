@@ -106,7 +106,7 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 
 	if name := p.DisplayModelName(); name != "" {
 		label := "✦ " + name
-		if p.Model != nil && p.Model.Effort != "" {
+		if p.Model != nil && p.Model.Effort != "" && !modelIncludesEffort(name, p.Model.Effort) {
 			label += " · " + shortEffort(p.Model.Effort)
 		}
 		line1 = append(line1, pill(pal.SurfaceHi, pal.Accent, label))
@@ -191,10 +191,28 @@ func formatModel(p *schema.Payload, pal theme.Palette, compact bool) string {
 		return ""
 	}
 	out := fgBold(pal.Accent, "✦ "+name)
-	if !compact && p.Model != nil && p.Model.Effort != "" {
+	if !compact && p.Model != nil && p.Model.Effort != "" && !modelIncludesEffort(name, p.Model.Effort) {
 		out += " " + fg(pal.Muted, "["+shortEffort(p.Model.Effort)+"]")
 	}
 	return out
+}
+
+func modelIncludesEffort(name, effort string) bool {
+	nl := strings.ToLower(strings.TrimSpace(name))
+	el := strings.ToLower(strings.TrimSpace(effort))
+	if nl == "" || el == "" {
+		return false
+	}
+	sh := shortEffort(el)
+	for _, token := range []string{el, sh} {
+		if strings.Contains(nl, "("+token+")") ||
+			strings.Contains(nl, "["+token+"]") ||
+			strings.HasSuffix(nl, " "+token) ||
+			strings.Contains(nl, " "+token+" ") {
+			return true
+		}
+	}
+	return false
 }
 
 func formatContext(p *schema.Payload, cfg config.Config, pal theme.Palette, barWidth int, compact bool) string {

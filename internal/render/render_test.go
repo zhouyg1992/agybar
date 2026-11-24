@@ -98,3 +98,27 @@ func TestRenderEmptyPayload(t *testing.T) {
 		t.Error("expected non-nil safe render on empty payload")
 	}
 }
+
+func TestModelEffortDedup(t *testing.T) {
+	p := samplePayload(40, 120)
+	p.Model.DisplayName = "Gemini 4 Neon (Medium)"
+	p.Model.Effort = "medium"
+
+	minimalOut := stripANSI(Render(p, config.Default()))
+	if strings.Contains(minimalOut, "[med]") {
+		t.Errorf("expected duplicate [med] to be omitted, got: %s", minimalOut)
+	}
+
+	pillCfg := config.Default()
+	pillCfg.Style = "pill"
+	pillOut := stripANSI(Render(p, pillCfg))
+	if strings.Contains(pillOut, "· med") {
+		t.Errorf("expected duplicate pill effort to be omitted, got: %s", pillOut)
+	}
+
+	p.Model.DisplayName = "Gemini 4 Neon"
+	withEffort := stripANSI(Render(p, config.Default()))
+	if !strings.Contains(withEffort, "[med]") {
+		t.Errorf("expected [med] when not in display name, got: %s", withEffort)
+	}
+}

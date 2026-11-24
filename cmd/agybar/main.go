@@ -12,7 +12,7 @@ import (
 	"github.com/zhouyg1992/agybar/internal/theme"
 )
 
-var version = "0.1.1"
+var version = "0.1.2"
 
 func main() {
 	if len(os.Args) > 1 {
