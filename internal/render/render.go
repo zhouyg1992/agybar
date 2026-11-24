@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/zhouyg1992/agybar/internal/config"
 	"github.com/zhouyg1992/agybar/internal/schema"
@@ -32,7 +33,7 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 	// --- Line 1: Model + Context Bar + Tokens + Quota ---
 	var line1 []string
 
-	if m := formatModel(p, pal, false); m != "" {
+	if m := formatModel(p, pal, compact); m != "" {
 		line1 = append(line1, m)
 	}
 
@@ -89,7 +90,7 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 		line2 = append(line2, fg(pal.Subtext, fmt.Sprintf("◈ %d", p.ArtifactCount)))
 	}
 	if p.Sandbox != nil && p.Sandbox.Enabled {
-		line2 = append(line2, fg(pal.Muted, "⊘ sandbox"))
+		line2 = append(line2, fg(pal.Subtext, "⊘ sandbox"))
 	}
 
 	out1 := " " + strings.Join(line1, sep)
@@ -106,7 +107,7 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 
 	if name := p.DisplayModelName(); name != "" {
 		label := "✦ " + name
-		if p.Model != nil && p.Model.Effort != "" && !modelIncludesEffort(name, p.Model.Effort) {
+		if !compact && p.Model != nil && p.Model.Effort != "" && !modelIncludesEffort(name, p.Model.Effort) {
 			label += " · " + shortEffort(p.Model.Effort)
 		}
 		line1 = append(line1, pill(pal.SurfaceHi, pal.Accent, label))
@@ -121,7 +122,7 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 		pctCol := pal.UsageColor(pct)
 		txt := fmt.Sprintf("%s %s", bar, fgBold(pctCol, fmt.Sprintf("%.0f%%", pct)))
 		if !compact && p.ContextWindow != nil && p.ContextWindow.ContextWindowSize > 0 {
-			used := p.ContextWindow.TotalInputTokens + p.ContextWindow.TotalOutputTokens
+			used := p.ContextWindow.EffectiveUsedTokens()
 			if used > 0 {
 				txt += " " + fg(pal.Subtext, fmt.Sprintf("(%s/%s)", formatCount(used), formatCount(p.ContextWindow.ContextWindowSize)))
 			}
@@ -176,6 +177,12 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 	if p.TaskCount > 0 {
 		line2 = append(line2, pill(pal.Surface, pal.Cyan, fmt.Sprintf("⏳ %d", p.TaskCount)))
 	}
+	if p.ArtifactCount > 0 {
+		line2 = append(line2, pill(pal.Surface, pal.Subtext, fmt.Sprintf("◈ %d", p.ArtifactCount)))
+	}
+	if p.Sandbox != nil && p.Sandbox.Enabled {
+		line2 = append(line2, pill(pal.Surface, pal.Subtext, "⊘ sandbox"))
+	}
 
 	out1 := " " + strings.Join(line1, " ")
 	if len(line2) == 0 {
@@ -225,7 +232,7 @@ func formatContext(p *schema.Payload, cfg config.Config, pal theme.Palette, barW
 	out := fmt.Sprintf("%s %s", bar, fgBold(pctCol, fmt.Sprintf("%.0f%%", pct)))
 
 	if !compact && p.ContextWindow != nil && p.ContextWindow.ContextWindowSize > 0 {
-		used := p.ContextWindow.TotalInputTokens + p.ContextWindow.TotalOutputTokens
+		used := p.ContextWindow.EffectiveUsedTokens()
 		if used > 0 {
 			out += " " + fg(pal.Subtext, fmt.Sprintf("(%s/%s)", formatCount(used), formatCount(p.ContextWindow.ContextWindowSize)))
 		}
@@ -280,17 +287,15 @@ func formatQuota(p *schema.Payload, pal theme.Palette, maxBuckets int, compact b
 		reset := ""
 		if b.ResetInSeconds != nil && *b.ResetInSeconds > 0 {
 			reset = formatDuration(*b.ResetInSeconds)
-		}
-		kl := strings.ToLower(k)
-		matched := false
-		if modelHint != "" {
-			for _, token := range []string{"gemini", "claude", "gpt", "pro", "flash", "neon", "opus", "sonnet"} {
-				if strings.Contains(kl, token) && strings.Contains(modelHint, token) {
-					matched = true
-					break
+		} else if b.ResetTime != "" {
+			if t, err := time.Parse(time.RFC3339, b.ResetTime); err == nil {
+				if secs := int64(time.Until(t).Seconds()); secs > 0 {
+					reset = formatDuration(secs)
 				}
 			}
 		}
+		kl := strings.ToLower(k)
+		matched := bucketMatchesModel(kl, modelHint)
 		entries = append(entries, quotaEntry{
 			name:   shortBucketName(k),
 			remPct: remPct,
@@ -355,7 +360,7 @@ func formatState(state string, pal theme.Palette, compact bool) string {
 		col = pal.Crit
 		dot = "✖"
 	default: // idle
-		col = pal.Muted
+		col = pal.Subtext
 		dot = "○"
 	}
 	if compact {
@@ -376,16 +381,35 @@ func formatVCS(p *schema.Payload, pal theme.Palette) string {
 }
 
 func formatDir(p *schema.Payload, pal theme.Palette) string {
-	dir := ""
-	if p.Workspace != nil && p.Workspace.CurrentDir != "" {
-		dir = p.Workspace.CurrentDir
-	} else if p.CWD != "" {
-		dir = p.CWD
-	}
+	dir := p.EffectiveDir()
 	if dir == "" {
 		return ""
 	}
 	return fg(pal.Subtext, shortenPath(dir))
+}
+
+func bucketMatchesModel(bucketKeyLower, modelHintLower string) bool {
+	if modelHintLower == "" {
+		return false
+	}
+	for _, token := range []string{"gemini", "claude", "gpt", "pro", "flash", "neon", "opus", "sonnet", "haiku"} {
+		if strings.Contains(bucketKeyLower, token) && strings.Contains(modelHintLower, token) {
+			return true
+		}
+	}
+	for _, token := range []string{"claude", "sonnet", "opus", "haiku", "gpt", "openai", "codex"} {
+		if strings.Contains(modelHintLower, token) {
+			return strings.Contains(bucketKeyLower, "3p") ||
+				strings.Contains(bucketKeyLower, "claude") ||
+				strings.Contains(bucketKeyLower, "gpt")
+		}
+	}
+	for _, token := range []string{"gemini", "neon", "flash", "orchestrator"} {
+		if strings.Contains(modelHintLower, token) {
+			return strings.Contains(bucketKeyLower, "gemini")
+		}
+	}
+	return false
 }
 
 func formatSubagents(p *schema.Payload, pal theme.Palette) string {
