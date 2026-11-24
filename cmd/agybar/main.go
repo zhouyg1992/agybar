@@ -10,6 +10,7 @@ import (
 	"github.com/zhouyg1992/agybar/internal/render"
 	"github.com/zhouyg1992/agybar/internal/schema"
 	"github.com/zhouyg1992/agybar/internal/theme"
+	"github.com/zhouyg1992/agybar/internal/vcs"
 )
 
 var version = "0.1.2"
@@ -59,6 +60,8 @@ func runStatusLine() {
 		fmt.Printf(" ✦ agybar (parse error)\n")
 		return
 	}
+
+	payload.VCS = vcs.Resolve(payload.VCS, payload.EffectiveDir())
 
 	cfg := config.Load()
 	fmt.Println(render.Render(payload, cfg))

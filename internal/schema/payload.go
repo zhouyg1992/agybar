@@ -13,6 +13,10 @@ type Payload struct {
 	ConversationID    string                 `json:"conversation_id"`
 	ConversationTitle string                 `json:"conversation_title"`
 	TranscriptPath    string                 `json:"transcript_path"`
+	Version           string                 `json:"version"`
+	Product           string                 `json:"product"`
+	CycleMode         string                 `json:"cycle_mode"`
+	Exceeds200kTokens *bool                  `json:"exceeds_200k_tokens"`
 	AgentState        string                 `json:"agent_state"`
 	Model             *ModelInfo             `json:"model"`
 	ContextWindow     *ContextWindow         `json:"context_window"`
@@ -58,6 +62,7 @@ type WorkspaceInfo struct {
 }
 
 type VCSInfo struct {
+	Type   string `json:"type"`
 	Branch string `json:"branch"`
 	Dirty  bool   `json:"dirty"`
 }
@@ -119,6 +124,46 @@ func (c *ContextWindow) EffectiveUsedPct() (float64, bool) {
 		return v, true
 	}
 	return 0, false
+}
+
+// EffectiveUsedTokens returns the current context token count when available,
+// falling back to total input + output tokens.
+func (c *ContextWindow) EffectiveUsedTokens() int64 {
+	if c == nil {
+		return 0
+	}
+	raw := strings.TrimSpace(string(c.CurrentUsage))
+	if raw != "" && raw != "null" {
+		var cu struct {
+			InputTokens              int64 `json:"input_tokens"`
+			CacheCreationInputTokens int64 `json:"cache_creation_input_tokens"`
+			CacheReadInputTokens     int64 `json:"cache_read_input_tokens"`
+			OutputTokens             int64 `json:"output_tokens"`
+		}
+		if err := json.Unmarshal([]byte(raw), &cu); err == nil {
+			sum := cu.InputTokens + cu.CacheCreationInputTokens + cu.CacheReadInputTokens + cu.OutputTokens
+			if sum > 0 {
+				return sum
+			}
+		}
+	}
+	return c.TotalInputTokens + c.TotalOutputTokens
+}
+
+// EffectiveDir returns the preferred working directory from workspace or cwd.
+func (p *Payload) EffectiveDir() string {
+	if p == nil {
+		return ""
+	}
+	if p.Workspace != nil {
+		if p.Workspace.CurrentDir != "" {
+			return p.Workspace.CurrentDir
+		}
+		if p.Workspace.ProjectDir != "" {
+			return p.Workspace.ProjectDir
+		}
+	}
+	return p.CWD
 }
 
 // DisplayModelName returns a concise human-friendly model name.
