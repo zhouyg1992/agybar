@@ -34,4 +34,5 @@ When the user asks to **enable**, **activate**, or **set up** `agybar`:
 - Switch theme (`catppuccin`, `tokyo-night`, `nord`, `mono`): `agybar theme <name>`
 - Switch style (`minimal`, `badge`, `pill`): `agybar style <style>`
 - Switch progress bar (`blocks`, `smooth`, `braille`): `agybar bar <bar>`
+- Switch `minimal` separator (`pipe`, `dashed`, `dot`, `square`, `none`, or custom text): `agybar sep <preset|text>`
 - Inspect current config: `agybar config`

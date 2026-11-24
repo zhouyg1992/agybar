@@ -263,3 +263,88 @@ func TestRGBToANSI256(t *testing.T) {
 		}
 	}
 }
+
+func TestMinimalSeparators(t *testing.T) {
+	p := samplePayload(52, 120)
+
+	presets := []struct {
+		spec string
+		want string
+	}{
+		{spec: "pipe", want: " │ "},
+		{spec: "dashed", want: " ┊ "},
+		{spec: "dot", want: " • "},
+		{spec: "square", want: " ▪ "},
+		{spec: "DOT", want: " • "},
+		{spec: "", want: " │ "},
+		{spec: "›", want: " › "},
+		{spec: "//", want: " // "},
+		{spec: "X", want: " X "},
+		{spec: "a\nb", want: " ab "},
+		{spec: "\n\t", want: " │ "},
+	}
+
+	for _, tc := range presets {
+		cfg := config.Default()
+		cfg.Separator = tc.spec
+		out := stripANSI(Render(p, cfg))
+		lines := strings.Split(out, "\n")
+		if len(lines) != 2 {
+			t.Fatalf("sep=%q expected 2 lines, got %d: %q", tc.spec, len(lines), out)
+		}
+		if !strings.Contains(lines[0], tc.want) {
+			t.Errorf("sep=%q line 1 missing %q: %q", tc.spec, tc.want, lines[0])
+		}
+		if !strings.Contains(lines[1], tc.want) {
+			t.Errorf("sep=%q line 2 missing %q: %q", tc.spec, tc.want, lines[1])
+		}
+
+		pNarrow := samplePayload(52, 72)
+		compactOut := stripANSI(Render(pNarrow, cfg))
+		if !strings.Contains(compactOut, tc.want) {
+			t.Errorf("sep=%q compact line missing %q: %q", tc.spec, tc.want, compactOut)
+		}
+	}
+
+	// Test "none" preset in wide ("   ") and compact ("  ") without pipe or empty ANSI resets.
+	for _, spec := range []string{"none", "None"} {
+		cfg := config.Default()
+		cfg.Separator = spec
+
+		wideRaw := Render(p, cfg)
+		widePlain := stripANSI(wideRaw)
+		wideLines := strings.Split(widePlain, "\n")
+		if len(wideLines) != 2 {
+			t.Fatalf("sep=%q expected 2 lines, got %q", spec, widePlain)
+		}
+		if strings.Contains(widePlain, "│") {
+			t.Errorf("sep=%q wide output should not contain │: %q", spec, widePlain)
+		}
+		if !strings.Contains(wideLines[0], "   ") || !strings.Contains(wideLines[1], "   ") {
+			t.Errorf("sep=%q wide lines should use 3 spaces: %q", spec, widePlain)
+		}
+		if strings.Contains(wideRaw, "m\x1b[0m") {
+			t.Errorf("sep=%q should not emit empty ANSI wrapper around spaces: %q", spec, wideRaw)
+		}
+
+		pNarrow := samplePayload(52, 72)
+		compactPlain := stripANSI(Render(pNarrow, cfg))
+		if strings.Contains(compactPlain, "│") {
+			t.Errorf("sep=%q compact output should not contain │: %q", spec, compactPlain)
+		}
+		if !strings.Contains(compactPlain, "  ") {
+			t.Errorf("sep=%q compact output should use 2 spaces: %q", spec, compactPlain)
+		}
+	}
+
+	// Badge and pill styles should ignore Separator and keep space-separated capsules.
+	for _, st := range []string{"badge", "pill"} {
+		cfg := config.Default()
+		cfg.Style = st
+		cfg.Separator = "dot"
+		out := stripANSI(Render(p, cfg))
+		if strings.Contains(out, " • ") {
+			t.Errorf("style=%s should ignore minimal separator 'dot', got: %q", st, out)
+		}
+	}
+}

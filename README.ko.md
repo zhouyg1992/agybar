@@ -87,6 +87,7 @@ agybar preview             # 모든 테마, 경고 표시, 컴팩트 모드, pil
 agybar theme tokyo-night   # 테마 변경 (catppuccin | tokyo-night | nord | mono)
 agybar style badge          # 스타일 변경 (minimal | badge | pill)
 agybar bar smooth          # 프로그레스 바 변경 (blocks | smooth | braille)
+agybar sep dot             # 구분자 변경 (pipe | dashed | dot | square | none | <custom>)
 agybar config              # 현재 설정 확인
 ```
 

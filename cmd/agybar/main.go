@@ -30,6 +30,9 @@ func main() {
 		case "bar":
 			runSetBar(os.Args[2:])
 			return
+		case "sep", "separator":
+			runSetSeparator(os.Args[2:])
+			return
 		case "config":
 			runShowConfig()
 			return
@@ -123,7 +126,7 @@ func runPreview() {
 	demoNarrow := *demoNormal
 	demoNarrow.TerminalWidth = 72
 
-	fmt.Println("\x1b[1m=== agybar preview (current config: theme=" + cfg.Theme + ", style=" + cfg.Style + ", bar=" + cfg.BarStyle + ") ===\x1b[0m")
+	fmt.Println("\x1b[1m=== agybar preview (current config: theme=" + cfg.Theme + ", style=" + cfg.Style + ", bar=" + cfg.BarStyle + ", sep=" + cfg.Separator + ") ===\x1b[0m")
 	fmt.Println()
 
 	for _, th := range theme.Names() {
@@ -153,6 +156,16 @@ func runPreview() {
 	pillCfg := cfg
 	pillCfg.Style = "pill"
 	fmt.Println(render.Render(demoNormal, pillCfg))
+	fmt.Println()
+
+	fmt.Printf("\x1b[2m── minimal separators · theme: %s ──\x1b[0m\n", cfg.Theme)
+	for _, sep := range []string{"pipe", "dashed", "dot", "square", "none"} {
+		sepCfg := cfg
+		sepCfg.Style = "minimal"
+		sepCfg.Separator = sep
+		fmt.Printf("\x1b[2m[%s]\x1b[0m\n", sep)
+		fmt.Println(render.Render(demoNormal, sepCfg))
+	}
 	fmt.Println()
 }
 
@@ -220,12 +233,51 @@ func runSetBar(args []string) {
 	fmt.Printf("Bar style set to %s (%s)\n", bs, config.Path())
 }
 
+func normalizeSeparatorArg(raw string) (string, error) {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		return "", fmt.Errorf("separator cannot be empty (use \"none\" for blank spacing, or pass a preset/custom character)")
+	}
+	for _, r := range trimmed {
+		if r < 0x20 || r == 0x7f {
+			return "", fmt.Errorf("separator cannot contain control characters")
+		}
+	}
+	lower := strings.ToLower(trimmed)
+	switch lower {
+	case "pipe", "dashed", "dot", "square", "none":
+		return lower, nil
+	default:
+		return trimmed, nil
+	}
+}
+
+func runSetSeparator(args []string) {
+	if len(args) == 0 {
+		fmt.Println(`Available separators: pipe (│), dashed (┊), dot (•), square (▪), none (blank), or any custom text (e.g. agybar sep "›")`)
+		return
+	}
+	sep, err := normalizeSeparatorArg(args[0])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Invalid separator: %v\n", err)
+		os.Exit(1)
+	}
+	cfg := config.Load()
+	cfg.Separator = sep
+	if err := config.Save(cfg); err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to save config: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Separator set to %s (%s)\n", sep, config.Path())
+}
+
 func runShowConfig() {
 	cfg := config.Load()
 	fmt.Printf("Config file: %s\n", config.Path())
 	fmt.Printf("  theme:       %s\n", cfg.Theme)
 	fmt.Printf("  style:       %s\n", cfg.Style)
 	fmt.Printf("  bar_style:   %s\n", cfg.BarStyle)
+	fmt.Printf("  separator:   %s\n", cfg.Separator)
 	fmt.Printf("  show_tokens: %v\n", cfg.ShowTokens)
 	fmt.Printf("  show_quota:  %v\n", cfg.ShowQuota)
 	fmt.Printf("  show_second: %v\n", cfg.ShowSecond)
@@ -241,6 +293,7 @@ Usage:
   agybar theme <name>            Switch theme (catppuccin | tokyo-night | nord | mono)
   agybar style <minimal|badge|pill>  Switch visual style
   agybar bar <blocks|smooth|braille>  Switch progress bar style
+  agybar sep <preset|text>       Switch minimal separator (pipe | dashed | dot | square | none | <custom>)
   agybar config                  Show active configuration
   agybar version                 Print version
 

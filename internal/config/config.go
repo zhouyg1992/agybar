@@ -8,13 +8,14 @@ import (
 
 // Config controls the appearance and enabled modules of agybar.
 type Config struct {
-	Theme       string `json:"theme"`        // catppuccin | tokyo-night | nord | mono
-	Style       string `json:"style"`        // minimal | badge | pill
-	BarStyle    string `json:"bar_style"`    // smooth | blocks | braille
-	ShowTokens  bool   `json:"show_tokens"`  // show ↑in ↓out token counters
-	ShowQuota   bool   `json:"show_quota"`   // show model quota buckets
-	ShowSecond  bool   `json:"show_second"`  // allow 2-line layout on wide terminals
-	CompactAt   int    `json:"compact_at"`   // collapse to 1-line when terminal_width < CompactAt
+	Theme      string `json:"theme"`       // catppuccin | tokyo-night | nord | mono
+	Style      string `json:"style"`       // minimal | badge | pill
+	BarStyle   string `json:"bar_style"`   // smooth | blocks | braille
+	Separator  string `json:"separator"`   // pipe | dashed | dot | square | none | <custom>
+	ShowTokens bool   `json:"show_tokens"` // show ↑in ↓out token counters
+	ShowQuota  bool   `json:"show_quota"`  // show model quota buckets
+	ShowSecond bool   `json:"show_second"` // allow 2-line layout on wide terminals
+	CompactAt  int    `json:"compact_at"`  // collapse to 1-line when terminal_width < CompactAt
 }
 
 // Default returns the default aesthetic configuration.
@@ -23,6 +24,7 @@ func Default() Config {
 		Theme:      "catppuccin",
 		Style:      "minimal",
 		BarStyle:   "blocks",
+		Separator:  "pipe",
 		ShowTokens: true,
 		ShowQuota:  true,
 		ShowSecond: true,
@@ -58,6 +60,9 @@ func Load() Config {
 	}
 	if cfg.BarStyle == "" {
 		cfg.BarStyle = "blocks"
+	}
+	if cfg.Separator == "" {
+		cfg.Separator = "pipe"
 	}
 	if cfg.CompactAt <= 0 {
 		cfg.CompactAt = 88

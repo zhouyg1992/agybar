@@ -87,6 +87,7 @@ agybar preview             # 全テーマ・高負荷警告・コンパクト表
 agybar theme tokyo-night   # テーマ切替 (catppuccin | tokyo-night | nord | mono)
 agybar style badge          # スタイル切替 (minimal | badge | pill)
 agybar bar smooth          # バー形式切替 (blocks | smooth | braille)
+agybar sep dot             # 区切り文字切替 (pipe | dashed | dot | square | none | <custom>)
 agybar config              # 現在の設定を表示
 ```
 
