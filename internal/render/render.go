@@ -32,7 +32,7 @@ func Render(p *schema.Payload, cfg config.Config) string {
 }
 
 func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, compact bool) string {
-	sep := " " + fg(pal.Muted, "│") + " "
+	sep := formatSeparator(cfg.Separator, pal, compact)
 
 	// --- Line 1: Model + Context Bar + Tokens + Quota ---
 	var line1 []string
@@ -103,6 +103,37 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 	}
 	out2 := " " + strings.Join(line2, sep)
 	return out1 + "\n" + out2
+}
+
+func formatSeparator(spec string, pal theme.Palette, compact bool) string {
+	trimmed := strings.TrimSpace(spec)
+	switch strings.ToLower(trimmed) {
+	case "", "pipe":
+		return " " + fg(pal.Muted, "│") + " "
+	case "dashed":
+		return " " + fg(pal.Muted, "┊") + " "
+	case "dot":
+		return " " + fg(pal.Muted, "•") + " "
+	case "square":
+		return " " + fg(pal.Muted, "▪") + " "
+	case "none":
+		if compact {
+			return "  "
+		}
+		return "   "
+	default:
+		sanitized := strings.Map(func(r rune) rune {
+			if r < 0x20 || r == 0x7f {
+				return -1
+			}
+			return r
+		}, trimmed)
+		sanitized = strings.TrimSpace(sanitized)
+		if sanitized == "" {
+			sanitized = "│"
+		}
+		return " " + fg(pal.Muted, sanitized) + " "
+	}
 }
 
 func renderCapsule(p *schema.Payload, cfg config.Config, pal theme.Palette, compact bool, rounded bool) string {

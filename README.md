@@ -90,6 +90,7 @@ Add the `statusLine` block to `~/.gemini/antigravity-cli/settings.json`:
 | `agybar theme <name>` | Switch theme: `catppuccin`, `tokyo-night`, `nord`, `mono` |
 | `agybar style <style>` | Switch style: `minimal` (default), `badge` (universal), or `pill` (Nerd Font / iTerm2 Powerline) |
 | `agybar bar <style>` | Switch progress bar: `blocks`, `smooth`, `braille` |
+| `agybar sep <preset\|text>` | Switch `minimal` separator: `pipe` (`│`), `dashed` (`┊`), `dot` (`•`), `square` (`▪`), `none` (blank), or custom text |
 | `agybar config` | Show active configuration and config file path |
 | `agybar version` | Print version |
 
@@ -102,6 +103,7 @@ Settings are persisted at `~/.config/agybar/config.json` (respects `XDG_CONFIG_H
   "theme": "catppuccin",
   "style": "minimal",
   "bar_style": "blocks",
+  "separator": "pipe",
   "show_tokens": true,
   "show_quota": true,
   "show_second": true,

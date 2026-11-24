@@ -92,6 +92,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 | `agybar theme <name>` | 切换主题：`catppuccin`、`tokyo-night`、`nord`、`mono` |
 | `agybar style <style>` | 切换风格：`minimal`（默认）、`badge`（通用徽章）或 `pill`（需 Nerd Font / iTerm2 Powerline） |
 | `agybar bar <style>` | 切换进度条：`blocks`、`smooth`、`braille` |
+| `agybar sep <preset\|text>` | 切换 `minimal` 风格分隔符：`pipe`（`│`）、`dashed`（`┊`）、`dot`（`•`）、`square`（`▪`）、`none`（纯留白）或自定义字符 |
 | `agybar config` | 查看当前生效配置与配置文件路径 |
 | `agybar version` | 查看版本号 |
 
@@ -104,6 +105,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
   "theme": "catppuccin",
   "style": "minimal",
   "bar_style": "blocks",
+  "separator": "pipe",
   "show_tokens": true,
   "show_quota": true,
   "show_second": true,
