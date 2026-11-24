@@ -1,0 +1,26 @@
+# agybar
+
+> agybar is a fast, aesthetic, zero-dependency Go statusline and real-time usage/quota bar for Google Antigravity CLI (`agy`). It reads `agy` statusLine JSON telemetry from stdin and renders model & effort info, context window progress bars with semantic color gradients, token counts, 5h/7d quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, and sandbox indicators in milliseconds.
+
+## Installation
+
+- [One-line installer](https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh): downloads prebuilt GitHub Release binaries with SHA-256 verification and configures `~/.gemini/antigravity-cli/settings.json`.
+- `curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh`
+- `agy plugin install https://github.com/zhouyg1992/agybar`
+- `go install github.com/zhouyg1992/agybar/cmd/agybar@latest`
+
+## Features & CLI Commands
+
+- Themes (`agybar theme <name>`): `catppuccin` (default), `tokyo-night`, `nord`, `mono`.
+- Styles (`agybar style <style>`): `minimal` (pure Unicode, works in any terminal), `pill` (Nerd Font rounded capsules).
+- Progress bars (`agybar bar <style>`): `blocks`, `smooth`, `braille`.
+- Responsive layout: 2-line layout on wide terminals, automatically collapsing to 1 compact line when `terminal_width < 88`.
+- Preview & config: `agybar preview`, `agybar config`, `agybar version`.
+
+## Documentation
+
+- [README (English)](https://github.com/zhouyg1992/agybar/blob/main/README.md)
+- [README (简体中文)](https://github.com/zhouyg1992/agybar/blob/main/README.zh-CN.md)
+- [README (日本語)](https://github.com/zhouyg1992/agybar/blob/main/README.ja.md)
+- [README (한국어)](https://github.com/zhouyg1992/agybar/blob/main/README.ko.md)
+- [Antigravity Skill](https://github.com/zhouyg1992/agybar/blob/main/skills/agybar/SKILL.md)
