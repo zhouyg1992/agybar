@@ -13,7 +13,7 @@ When the user asks to **enable**, **activate**, or **set up** `agybar`:
 
 1. **Ensure the `agybar` binary is installed** (prefer `~/.local/bin/agybar`):
    - Check if `agybar` is already on `PATH` or at `~/.local/bin/agybar`.
-   - If not found, build it from the plugin directory (or via `GOBIN="$HOME/.local/bin" go install github.com/zhouyg1992/agybar/cmd/agybar@latest`), or run `scripts/install.sh` from the plugin repository.
+   - If not found, run `curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh` (downloads the prebuilt GitHub Release binary with checksum verification).
 2. **Update `~/.gemini/antigravity-cli/settings.json`** (preserve all existing keys!):
    Merge the following `statusLine` block into `~/.gemini/antigravity-cli/settings.json`:
    ```json

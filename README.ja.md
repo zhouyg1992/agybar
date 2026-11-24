@@ -40,10 +40,10 @@
 
 ### 方法 1：ワンライナー・インストーラー（推奨）
 
-最新のビルド済みバイナリをダウンロード（未公開時は自動で `go install` にフォールバック）し、`~/.gemini/antigravity-cli/settings.json` の設定と `agy` プラグイン登録を自動で行います：
+GitHub Releases から最新プラットフォーム向けビルド済みバイナリ（SHA-256 検証付き・Go 不要）をダウンロードし、`~/.gemini/antigravity-cli/settings.json` の設定と `agy` プラグイン登録を自動で行います：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh
 ```
 
 完了後、`agy` を再起動してください。

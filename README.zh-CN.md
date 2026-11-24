@@ -40,10 +40,10 @@
 
 ### 方式 1：一行命令安装（推荐）
 
-自动下载最新预编译二进制（无 Release 时自动回退 `go install`），安全写入 `~/.gemini/antigravity-cli/settings.json` 并注册 `agy` 插件：
+直接从 GitHub Releases 下载对应平台的预编译二进制（带 SHA-256 校验，无需安装 Go），安全写入 `~/.gemini/antigravity-cli/settings.json` 并注册 `agy` 插件：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh
 ```
 
 安装完成后重启 `agy` 即可生效。

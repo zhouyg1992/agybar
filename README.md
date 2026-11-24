@@ -40,10 +40,10 @@
 
 ### Option 1: One-Line Installer (Recommended)
 
-Downloads the latest prebuilt binary (or falls back to `go install`), configures `~/.gemini/antigravity-cli/settings.json`, and registers the `agy` plugin:
+Downloads the latest prebuilt binary from GitHub Releases (with SHA-256 verification), configures `~/.gemini/antigravity-cli/settings.json`, and registers the `agy` plugin:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh
 ```
 
 Then restart `agy`.

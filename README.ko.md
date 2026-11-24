@@ -40,10 +40,10 @@
 
 ### 방법 1: 원라인 설치 스크립트 (권장)
 
-최신 프리빌드 바이너리를 다운로드(릴리스가 없을 경우 `go install`로 자동 폴백)하고 `~/.gemini/antigravity-cli/settings.json` 설정 및 `agy` 플러그인 등록을 자동으로 완료합니다:
+GitHub Releases에서 최신 프리빌드 바이너리(SHA-256 검증 포함, Go 불필요)를 다운로드하고 `~/.gemini/antigravity-cli/settings.json` 설정 및 `agy` 플러그인 등록을 자동으로 완료합니다:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/install.sh | sh
 ```
 
 설치 후 `agy`를 재시작하세요.

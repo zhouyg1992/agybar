@@ -1,4 +1,4 @@
-name: Release
+name: release
 
 on:
   push:
@@ -9,49 +9,85 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
+          cache: true
+      - run: go test ./...
+      - run: go vet ./...
 
-      - name: Run tests
-        run: go test ./...
-
-      - name: Build release archives
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: darwin
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Build archive
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.ref_name }}
         run: |
-          mkdir -p dist
-          targets=(
-            "darwin/arm64"
-            "darwin/amd64"
-            "linux/amd64"
-            "linux/arm64"
-            "windows/amd64"
-          )
-          for target in "${targets[@]}"; do
-            IFS="/" read -r goos goarch <<< "$target"
-            ext=""
-            if [ "$goos" = "windows" ]; then
-              ext=".exe"
-            fi
-            out="dist/agybar${ext}"
-            GOOS="$goos" GOARCH="$goarch" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "$out" ./cmd/agybar
-            if [ "$goos" = "windows" ]; then
-              (cd dist && zip -q "agybar_${goos}_${goarch}.zip" "agybar${ext}")
-            else
-              tar -C dist -czf "dist/agybar_${goos}_${goarch}.tar.gz" "agybar${ext}"
-            fi
-            rm -f "$out"
-          done
-          (cd dist && sha256sum agybar_* > checksums.txt)
-
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+          set -eu
+          NAME="agybar_${VERSION#v}_${GOOS}_${GOARCH}"
+          mkdir -p "dist/${NAME}"
+          CGO_ENABLED=0 go build \
+            -trimpath \
+            -ldflags "-s -w -X main.version=${VERSION}" \
+            -o "dist/${NAME}/agybar" ./cmd/agybar
+          cp README.md README.zh-CN.md README.ja.md README.ko.md LICENSE "dist/${NAME}/"
+          tar -C "dist/${NAME}" -czf "dist/${NAME}.tar.gz" .
+      - uses: actions/upload-artifact@v4
         with:
-          generate_release_notes: true
-          files: dist/*
+          name: agybar-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*.tar.gz
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Generate checksums
+        run: |
+          set -eu
+          cd dist
+          sha256sum *.tar.gz > checksums.txt
+          cat checksums.txt
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -eu
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/*.tar.gz dist/checksums.txt install.sh --clobber
+          else
+            gh release create "$TAG" \
+              --title "agybar $TAG" \
+              --generate-notes \
+              dist/*.tar.gz dist/checksums.txt install.sh
+          fi
