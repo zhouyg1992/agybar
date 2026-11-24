@@ -1,11 +1,29 @@
-# agybar
+<div align="center">
 
-> A fast, aesthetic, zero-dependency Go statusline & real-time usage bar for **Google Antigravity CLI (`agy`)**.
+<img src="./assets/logo.svg" width="360" alt="agybar logo" />
 
-```text
- ✦ Gemini 4 Neon [med] │ ▰▰▰▰▰▱▱▱▱▱ 52% (104.0k/200.0k) │ ↑92.4k ↓11.6k │ ⚡ 7d:64%(3d) · 5h:82%(2h15m)
- ◉ thinking │ ⎇ main* │ ~/…/github/agybar │ ⬡ 2 agents │ ⏳ 1
-```
+**A fast, aesthetic, zero-dependency Go statusline & real-time usage bar for Google Antigravity CLI (`agy`).**
+
+<p>
+  <a href="https://github.com/zhouyg1992/agybar/releases"><img src="https://img.shields.io/github/v/release/zhouyg1992/agybar?color=orange&label=release" alt="Release" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="License" /></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go&logoColor=white" alt="Go Version" /></a>
+  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform" />
+  <a href="https://github.com/zhouyg1992/agybar/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/zhouyg1992/agybar/ci.yml?branch=main&logo=github&label=ci" alt="CI" /></a>
+</p>
+
+<p>
+  <strong>English</strong> ·
+  <a href="./README.zh-CN.md">简体中文</a> ·
+  <a href="./README.ja.md">日本語</a> ·
+  <a href="./README.ko.md">한국어</a>
+</p>
+
+<img src="./assets/preview.svg" width="820" alt="agybar terminal preview" />
+
+</div>
+
+---
 
 ## Features
 
@@ -22,7 +40,7 @@
 
 ### Option 1: One-Line Installer (Recommended)
 
-Downloads the latest prebuilt binary (or falls back to `go install` if no release is published yet), configures `~/.gemini/antigravity-cli/settings.json`, and registers the `agy` plugin:
+Downloads the latest prebuilt binary (or falls back to `go install`), configures `~/.gemini/antigravity-cli/settings.json`, and registers the `agy` plugin:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
@@ -36,7 +54,7 @@ Then restart `agy`.
 agy plugin install https://github.com/zhouyg1992/agybar
 ```
 
-Then open `agy` and say **"enable agybar"** (or **"启用 agybar"**) — the bundled skill will build the binary and configure `settings.json` for you.
+Then open `agy` and say **"enable agybar"** — the bundled skill will build the binary and configure `settings.json` for you.
 
 ### Option 3: `go install` / Manual Setup
 

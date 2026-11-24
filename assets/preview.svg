@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 250" width="860" height="250" fill="none">
+  <defs>
+    <linearGradient id="winBg" x1="0" y1="0" x2="860" y2="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E1E2E"/>
+      <stop offset="100%" stop-color="#181825"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Terminal window -->
+  <rect x="1" y="1" width="858" height="248" rx="14" fill="url(#winBg)" stroke="#313244" stroke-width="1.5"/>
+
+  <!-- Window header -->
+  <circle cx="22" cy="20" r="5.5" fill="#F38BA8"/>
+  <circle cx="40" cy="20" r="5.5" fill="#F9E2AF"/>
+  <circle cx="58" cy="20" r="5.5" fill="#A6E3A1"/>
+  <text x="430" y="24" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="12" fill="#6C7086">agybar preview — 24-bit TrueColor</text>
+  <line x1="1" y1="36" x2="859" y2="36" stroke="#313244" stroke-width="1"/>
+
+  <!-- Section 1: Catppuccin minimal -->
+  <text x="24" y="60" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="11.5" fill="#6C7086">── catppuccin (minimal · wide) ──</text>
+  <text x="24" y="84" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13.5">
+    <tspan fill="#CBA6F7" font-weight="700">✦ Gemini 4 Neon</tspan>
+    <tspan fill="#585B70"> [med] │ </tspan>
+    <tspan fill="#A6E3A1">▰▰▰</tspan><tspan fill="#CFE3A8">▰▰</tspan><tspan fill="#585B70">▱▱▱▱▱ </tspan>
+    <tspan fill="#F9E2AF" font-weight="700">52%</tspan>
+    <tspan fill="#A6ADC8"> (104.0k/200.0k)</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#A6ADC8">↑92.4k ↓11.6k</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#F9E2AF">⚡ </tspan><tspan fill="#A6ADC8">7d:</tspan><tspan fill="#A6E3A1" font-weight="700">64%</tspan><tspan fill="#585B70">(3d) · </tspan><tspan fill="#A6ADC8">5h:</tspan><tspan fill="#A6E3A1" font-weight="700">82%</tspan><tspan fill="#585B70">(2h15m)</tspan>
+  </text>
+  <text x="24" y="106" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13.5">
+    <tspan fill="#CBA6F7">◉ thinking</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#89B4FA">⎇ main</tspan><tspan fill="#F9E2AF" font-weight="700">*</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#A6ADC8">~/…/github/agybar</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#CBA6F7">⬡ 2 agents</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#94E2D5">⏳ 1</tspan>
+  </text>
+
+  <!-- Section 2: High usage warning -->
+  <text x="24" y="140" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="11.5" fill="#6C7086">── high usage warning (&gt;90%) ──</text>
+  <text x="24" y="164" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13.5">
+    <tspan fill="#CBA6F7" font-weight="700">✦ Claude Sonnet</tspan>
+    <tspan fill="#585B70"> [high] │ </tspan>
+    <tspan fill="#A6E3A1">▰▰</tspan><tspan fill="#D9C99F">▰▰</tspan><tspan fill="#F4A89B">▰▰▰</tspan><tspan fill="#F38BA8">▰▰</tspan><tspan fill="#585B70">▱ </tspan>
+    <tspan fill="#F38BA8" font-weight="700">93%</tspan>
+    <tspan fill="#A6ADC8"> (186.5k/200.0k) </tspan>
+    <tspan fill="#F38BA8" font-weight="700">→ /compact</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#F9E2AF">⚡ </tspan><tspan fill="#A6ADC8">5h:</tspan><tspan fill="#FAB387" font-weight="700">14%</tspan><tspan fill="#585B70">(45m)</tspan>
+  </text>
+  <text x="24" y="186" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13.5">
+    <tspan fill="#94E2D5">⚙ tool_use</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#89B4FA">⎇ feat/hud</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#A6ADC8">~/…/github/agybar</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#585B70">⊘ sandbox</tspan>
+  </text>
+
+  <!-- Section 3: Compact mode -->
+  <text x="24" y="216" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="11.5" fill="#6C7086">── compact mode (&lt;88 cols) ──</text>
+  <text x="24" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="13.5">
+    <tspan fill="#CBA6F7" font-weight="700">✦ Gemini 4 Neon</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#A6E3A1">▰▰</tspan><tspan fill="#D9E2A8">▰</tspan><tspan fill="#585B70">▱▱▱ </tspan>
+    <tspan fill="#F9E2AF" font-weight="700">52%</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#F9E2AF">⚡ </tspan><tspan fill="#A6ADC8">7d:</tspan><tspan fill="#A6E3A1" font-weight="700">64%</tspan>
+    <tspan fill="#585B70"> │ </tspan>
+    <tspan fill="#CBA6F7">◉</tspan>
+  </text>
+</svg>
