@@ -29,7 +29,7 @@
 
 - **Zero dependencies, millisecond startup** — Single static Go binary; renders in a few milliseconds without slowing down `agy`.
 - **4 curated 24-bit TrueColor themes** — `catppuccin` (default), `tokyo-night`, `nord`, and `mono`.
-- **2 visual styles** — `minimal` (pure Unicode, works out of the box in any terminal) and `pill` (Nerd Font rounded capsules).
+- **3 visual styles** — `minimal` (pure Unicode, works out of the box in any terminal), `badge` (universal colored badges, no Nerd Font required), and `pill` (rounded capsules for Nerd Font or iTerm2 built-in Powerline glyphs).
 - **3 gradient progress bar styles** — `blocks` (`▰▱`), `smooth` (`━╸─`), and `braille` (`⣿⣤⣀`) with semantic color transitions (`green → yellow → peach → red`, plus an automatic `→ /compact` hint at `≥90%`).
 - **Responsive layout** — Uses `terminal_width` to render 2 spacious lines on wide terminals and automatically collapse to 1 compact line on narrow panes (`<88` columns).
 - **Rich `agy` telemetry** — Model & effort level, context window usage & token counters (`↑in ↓out`), model quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, background tasks, artifacts, and sandbox indicator.
@@ -88,7 +88,7 @@ Add the `statusLine` block to `~/.gemini/antigravity-cli/settings.json`:
 | :--- | :--- |
 | `agybar preview` | Preview all themes, high-usage warnings, compact mode, and pill style |
 | `agybar theme <name>` | Switch theme: `catppuccin`, `tokyo-night`, `nord`, `mono` |
-| `agybar style <style>` | Switch style: `minimal` (default) or `pill` (requires Nerd Font) |
+| `agybar style <style>` | Switch style: `minimal` (default), `badge` (universal), or `pill` (Nerd Font / iTerm2 Powerline) |
 | `agybar bar <style>` | Switch progress bar: `blocks`, `smooth`, `braille` |
 | `agybar config` | Show active configuration and config file path |
 | `agybar version` | Print version |

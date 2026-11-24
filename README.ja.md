@@ -29,7 +29,7 @@
 
 - **依存関係ゼロ＆ミリ秒起動** — 単一の静的 Go バイナリ。`agy` の操作感を損なわず瞬時に描画します。
 - **4 種類の 24-bit TrueColor テーマ** — `catppuccin`（デフォルト）、`tokyo-night`、`nord`、`mono`。
-- **2 つのビジュアルスタイル** — `minimal`（純 Unicode でどの端末でもそのまま綺麗に表示）と `pill`（Nerd Font 対応のカプセル型）。
+- **3 つのビジュアルスタイル** — `minimal`（純 Unicode でどの端末でもそのまま綺麗に表示）、`badge`（Nerd Font 不要の汎用カラーバッジ）、`pill`（Nerd Font / iTerm2 Powerline 対応の丸角カプセル型）。
 - **3 種類のグラデーション・プログレスバー** — `blocks`（`▰▱`）、`smooth`（`━╸─`）、`braille`（`⣿⣤⣀`）。使用率に応じて色が変化し、`90%` 以上で自動的に `→ /compact` を提案します。
 - **レスポンシブレイアウト** — `terminal_width` を検知し、広い画面では 2 行、狭いペイン（`<88` 桁）では自動的に 1 行のコンパクト表示へ切り替わります。
 - **豊富な `agy` テレメトリ** — モデル名・推論強度、コンテキスト使用率とトークン数（`↑in ↓out`）、クォータ残量とリセットまでのカウントダウン、エージェント状態、Git ブランチ、サブエージェント数、バックグラウンドタスク、サンドボックス状態を表示。
@@ -85,7 +85,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 ```bash
 agybar preview             # 全テーマ・高負荷警告・コンパクト表示・pill スタイルをプレビュー
 agybar theme tokyo-night   # テーマ切替 (catppuccin | tokyo-night | nord | mono)
-agybar style pill          # スタイル切替 (minimal | pill)
+agybar style badge          # スタイル切替 (minimal | badge | pill)
 agybar bar smooth          # バー形式切替 (blocks | smooth | braille)
 agybar config              # 現在の設定を表示
 ```

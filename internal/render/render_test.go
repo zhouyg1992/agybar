@@ -82,7 +82,7 @@ func TestRenderHighUsageCompactHint(t *testing.T) {
 func TestRenderAllThemesAndStyles(t *testing.T) {
 	p := samplePayload(68, 120)
 	for _, th := range theme.Names() {
-		for _, st := range []string{"minimal", "pill"} {
+		for _, st := range []string{"minimal", "badge", "pill"} {
 			cfg := config.Default()
 			cfg.Theme = th
 			cfg.Style = st
@@ -126,6 +126,10 @@ func TestModelEffortDedup(t *testing.T) {
 }
 
 func TestIdleStateUsesSubtextColor(t *testing.T) {
+	t.Setenv("COLORTERM", "truecolor")
+	t.Setenv("TERM_PROGRAM", "iTerm.app")
+	t.Setenv("AGYBAR_COLOR", "")
+
 	p := samplePayload(20, 120)
 	p.AgentState = "idle"
 	pal := theme.Get("catppuccin")
@@ -196,5 +200,66 @@ func TestQuotaModelMatchingAndResetTimeFallback(t *testing.T) {
 	outClaude := stripANSI(Render(p, config.Default()))
 	if !strings.Contains(outClaude, "3p-5h:10%") || !strings.Contains(outClaude, "3p-7d:20%") {
 		t.Errorf("expected 3p buckets prioritized for Claude Sonnet, got: %s", outClaude)
+	}
+}
+
+func TestTerminalAppFallbackTo256Color(t *testing.T) {
+	t.Setenv("TERM_PROGRAM", "Apple_Terminal")
+	t.Setenv("AGYBAR_COLOR", "")
+
+	p := samplePayload(68, 120)
+	for _, th := range theme.Names() {
+		for _, st := range []string{"minimal", "badge", "pill"} {
+			cfg := config.Default()
+			cfg.Theme = th
+			cfg.Style = st
+			out := Render(p, cfg)
+			if strings.Contains(out, "38;2;") || strings.Contains(out, "48;2;") {
+				t.Errorf("Apple_Terminal output must not emit 24-bit SGR (theme=%s style=%s): %q", th, st, out)
+			}
+			if !strings.Contains(out, "38;5;") {
+				t.Errorf("Apple_Terminal output missing 256-color fg SGR (theme=%s style=%s): %q", th, st, out)
+			}
+			if (st == "badge" || st == "pill") && !strings.Contains(out, "48;5;") {
+				t.Errorf("Apple_Terminal %s output missing 256-color bg SGR (theme=%s): %q", st, th, out)
+			}
+		}
+	}
+}
+
+func TestBadgeAndPillCaps(t *testing.T) {
+	p := samplePayload(52, 120)
+	cfg := config.Default()
+	cfg.Style = "badge"
+
+	badgeOut := Render(p, cfg)
+	if !strings.Contains(badgeOut, "48;") {
+		t.Errorf("badge output should contain background SGR: %q", badgeOut)
+	}
+	if strings.Contains(badgeOut, "\ue0b6") || strings.Contains(badgeOut, "\ue0b4") {
+		t.Errorf("badge output should not contain Nerd Font PUA caps: %q", badgeOut)
+	}
+
+	cfg.Style = "pill"
+	pillOut := Render(p, cfg)
+	if !strings.Contains(pillOut, "\ue0b6") || !strings.Contains(pillOut, "\ue0b4") {
+		t.Errorf("pill output should contain Nerd Font PUA caps: %q", pillOut)
+	}
+}
+
+func TestRGBToANSI256(t *testing.T) {
+	cases := []struct {
+		c    theme.RGB
+		want uint8
+	}{
+		{theme.RGB{R: 49, G: 50, B: 68}, 237},
+		{theme.RGB{R: 255, G: 255, B: 255}, 231},
+		{theme.RGB{R: 0, G: 0, B: 0}, 16},
+		{theme.RGB{R: 158, G: 206, B: 106}, 149},
+	}
+	for _, tc := range cases {
+		if got := rgbToANSI256(tc.c); got != tc.want {
+			t.Errorf("rgbToANSI256(%+v) = %d, want %d", tc.c, got, tc.want)
+		}
 	}
 }

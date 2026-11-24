@@ -32,6 +32,6 @@ When the user asks to **enable**, **activate**, or **set up** `agybar`:
 ## Common Customization Commands
 - Preview all themes and layouts: `agybar preview`
 - Switch theme (`catppuccin`, `tokyo-night`, `nord`, `mono`): `agybar theme <name>`
-- Switch style (`minimal`, `pill`): `agybar style <style>`
+- Switch style (`minimal`, `badge`, `pill`): `agybar style <style>`
 - Switch progress bar (`blocks`, `smooth`, `braille`): `agybar bar <bar>`
 - Inspect current config: `agybar config`

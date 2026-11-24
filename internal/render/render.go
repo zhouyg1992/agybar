@@ -21,10 +21,14 @@ func Render(p *schema.Payload, cfg config.Config) string {
 	pal := theme.Get(cfg.Theme)
 	compact := !cfg.ShowSecond || (p.TerminalWidth > 0 && p.TerminalWidth < cfg.CompactAt)
 
-	if strings.EqualFold(cfg.Style, "pill") {
-		return renderPill(p, cfg, pal, compact)
+	switch strings.ToLower(strings.TrimSpace(cfg.Style)) {
+	case "badge":
+		return renderCapsule(p, cfg, pal, compact, false)
+	case "pill":
+		return renderCapsule(p, cfg, pal, compact, true)
+	default:
+		return renderMinimal(p, cfg, pal, compact)
 	}
-	return renderMinimal(p, cfg, pal, compact)
 }
 
 func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, compact bool) string {
@@ -101,7 +105,7 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 	return out1 + "\n" + out2
 }
 
-func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact bool) string {
+func renderCapsule(p *schema.Payload, cfg config.Config, pal theme.Palette, compact bool, rounded bool) string {
 	// --- Line 1 pills ---
 	var line1 []string
 
@@ -110,7 +114,7 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 		if !compact && p.Model != nil && p.Model.Effort != "" && !modelIncludesEffort(name, p.Model.Effort) {
 			label += " · " + shortEffort(p.Model.Effort)
 		}
-		line1 = append(line1, pill(pal.SurfaceHi, pal.Accent, label))
+		line1 = append(line1, pill(pal.SurfaceHi, pal.Accent, label, rounded))
 	}
 
 	if pct, ok := p.ContextWindow.EffectiveUsedPct(); ok {
@@ -135,7 +139,7 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 
 	if cfg.ShowTokens && !compact {
 		if tok := formatTokens(p, pal); tok != "" {
-			line1 = append(line1, pill(pal.Surface, pal.Subtext, stripANSI(tok)))
+			line1 = append(line1, pill(pal.Surface, pal.Subtext, stripANSI(tok), rounded))
 		}
 	}
 
@@ -166,22 +170,22 @@ func renderPill(p *schema.Payload, cfg config.Config, pal theme.Palette, compact
 		if p.VCS.Dirty {
 			br += "*"
 		}
-		line2 = append(line2, pill(pal.Surface, pal.Accent2, br))
+		line2 = append(line2, pill(pal.Surface, pal.Accent2, br, rounded))
 	}
 	if dir := formatDir(p, pal); dir != "" {
 		line2 = append(line2, dir)
 	}
 	if sub := formatSubagents(p, pal); sub != "" {
-		line2 = append(line2, sub)
+		line2 = append(line2, pill(pal.Surface, pal.Accent, stripANSI(sub), rounded))
 	}
 	if p.TaskCount > 0 {
-		line2 = append(line2, pill(pal.Surface, pal.Cyan, fmt.Sprintf("⏳ %d", p.TaskCount)))
+		line2 = append(line2, pill(pal.Surface, pal.Cyan, fmt.Sprintf("⏳ %d", p.TaskCount), rounded))
 	}
 	if p.ArtifactCount > 0 {
-		line2 = append(line2, pill(pal.Surface, pal.Subtext, fmt.Sprintf("◈ %d", p.ArtifactCount)))
+		line2 = append(line2, pill(pal.Surface, pal.Subtext, fmt.Sprintf("◈ %d", p.ArtifactCount), rounded))
 	}
 	if p.Sandbox != nil && p.Sandbox.Enabled {
-		line2 = append(line2, pill(pal.Surface, pal.Subtext, "⊘ sandbox"))
+		line2 = append(line2, pill(pal.Surface, pal.Subtext, "⊘ sandbox", rounded))
 	}
 
 	out1 := " " + strings.Join(line1, " ")

@@ -13,7 +13,7 @@ import (
 	"github.com/zhouyg1992/agybar/internal/vcs"
 )
 
-var version = "0.1.3"
+var version = "0.1.4"
 
 func main() {
 	if len(os.Args) > 1 {
@@ -143,7 +143,13 @@ func runPreview() {
 	fmt.Println(render.Render(&demoNarrow, cfg))
 	fmt.Println()
 
-	fmt.Printf("\x1b[2m── pill style (Nerd Font) · theme: %s ──\x1b[0m\n", cfg.Theme)
+	fmt.Printf("\x1b[2m── badge style (universal) · theme: %s ──\x1b[0m\n", cfg.Theme)
+	badgeCfg := cfg
+	badgeCfg.Style = "badge"
+	fmt.Println(render.Render(demoNormal, badgeCfg))
+	fmt.Println()
+
+	fmt.Printf("\x1b[2m── pill style (Nerd Font / iTerm2 Powerline) · theme: %s ──\x1b[0m\n", cfg.Theme)
 	pillCfg := cfg
 	pillCfg.Style = "pill"
 	fmt.Println(render.Render(demoNormal, pillCfg))
@@ -178,12 +184,12 @@ func runSetTheme(args []string) {
 
 func runSetStyle(args []string) {
 	if len(args) == 0 {
-		fmt.Println("Available styles: minimal, pill")
+		fmt.Println("Available styles: minimal, badge, pill")
 		return
 	}
 	st := strings.ToLower(args[0])
-	if st != "minimal" && st != "pill" {
-		fmt.Fprintf(os.Stderr, "Unknown style %q. Available: minimal, pill\n", st)
+	if st != "minimal" && st != "badge" && st != "pill" {
+		fmt.Fprintf(os.Stderr, "Unknown style %q. Available: minimal, badge, pill\n", st)
 		os.Exit(1)
 	}
 	cfg := config.Load()
@@ -233,7 +239,7 @@ Usage:
   agybar                         Read agy statusLine JSON from stdin and render
   agybar preview                 Preview all themes, styles, and responsive layouts
   agybar theme <name>            Switch theme (catppuccin | tokyo-night | nord | mono)
-  agybar style <minimal|pill>    Switch visual style
+  agybar style <minimal|badge|pill>  Switch visual style
   agybar bar <blocks|smooth|braille>  Switch progress bar style
   agybar config                  Show active configuration
   agybar version                 Print version

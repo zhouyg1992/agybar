@@ -9,7 +9,7 @@ import (
 // Config controls the appearance and enabled modules of agybar.
 type Config struct {
 	Theme       string `json:"theme"`        // catppuccin | tokyo-night | nord | mono
-	Style       string `json:"style"`        // minimal | pill
+	Style       string `json:"style"`        // minimal | badge | pill
 	BarStyle    string `json:"bar_style"`    // smooth | blocks | braille
 	ShowTokens  bool   `json:"show_tokens"`  // show ↑in ↓out token counters
 	ShowQuota   bool   `json:"show_quota"`   // show model quota buckets

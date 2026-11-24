@@ -29,7 +29,7 @@
 
 - **零依赖、毫秒级启动** — 纯 Go 编译的单文件二进制，每次状态刷新仅需几毫秒，绝不卡顿 `agy`。
 - **4 套精选 24-bit TrueColor 主题** — `catppuccin`（默认）、`tokyo-night`、`nord`、`mono`。
-- **2 种视觉风格** — `minimal`（纯 Unicode，无需特殊字体，任意终端开箱即美）与 `pill`（Nerd Font 圆角胶囊风格）。
+- **3 种视觉风格** — `minimal`（纯 Unicode，无需特殊字体，任意终端开箱即美）、`badge`（通用纯色徽章，无需 Nerd Font）与 `pill`（圆角胶囊风格，需 Nerd Font 或 iTerm2 内置 Powerline）。
 - **3 种渐变进度条** — `blocks`（`▰▱`）、`smooth`（`━╸─`）、`braille`（`⣿⣤⣀`），随占比平滑变色（`绿 → 黄 → 橙 → 红`，超过 `90%` 自动提示 `→ /compact`）。
 - **真正的响应式布局** — 读取 `terminal_width`，宽屏优雅展示双行，窄屏（`<88` 列）自动折叠为紧凑单行，不换行炸版。
 - **完整 `agy` 遥测指标** — 当前模型与思维档位、上下文窗口占比与 Token 计数（`↑in ↓out`）、各模型配额剩余与重置倒计时、Agent 运行状态、Git 分支与脏标记、子代理数、后台任务数、产物数与沙箱标识。
@@ -90,7 +90,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 | :--- | :--- |
 | `agybar preview` | 在终端预览全部主题、高占用告警、窄屏模式与胶囊风格 |
 | `agybar theme <name>` | 切换主题：`catppuccin`、`tokyo-night`、`nord`、`mono` |
-| `agybar style <style>` | 切换风格：`minimal`（默认）或 `pill`（需 Nerd Font） |
+| `agybar style <style>` | 切换风格：`minimal`（默认）、`badge`（通用徽章）或 `pill`（需 Nerd Font / iTerm2 Powerline） |
 | `agybar bar <style>` | 切换进度条：`blocks`、`smooth`、`braille` |
 | `agybar config` | 查看当前生效配置与配置文件路径 |
 | `agybar version` | 查看版本号 |
