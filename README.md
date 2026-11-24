@@ -20,39 +20,29 @@
 
 ## Installation
 
-### Option 1: `go install` (Recommended)
+### Option 1: One-Line Installer (Recommended)
+
+Downloads the latest prebuilt binary (or falls back to `go install` if no release is published yet), configures `~/.gemini/antigravity-cli/settings.json`, and registers the `agy` plugin:
 
 ```bash
-go install github.com/zhouyg1992/agybar/cmd/agybar@latest
+curl -fsSL https://raw.githubusercontent.com/zhouyg1992/agybar/main/scripts/install.sh | bash
 ```
 
-Make sure `$(go env GOPATH)/bin` is in your `PATH`.
+Then restart `agy`.
 
-### Option 2: Build from Source
-
-```bash
-git clone git@github.com:zhouyg1992/agybar.git
-cd agybar
-go build -o bin/agybar ./cmd/agybar
-```
-
-### Optional: Install as an `agy` Plugin
+### Option 2: `agy plugin install` + Activate in Chat
 
 ```bash
 agy plugin install https://github.com/zhouyg1992/agybar
 ```
 
----
+Then open `agy` and say **"enable agybar"** (or **"启用 agybar"**) — the bundled skill will build the binary and configure `settings.json` for you.
 
-## Quick Start
-
-### 1. Preview themes & layouts in your terminal
+### Option 3: `go install` / Manual Setup
 
 ```bash
-agybar preview
+go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 ```
-
-### 2. Enable in Antigravity CLI (`agy`)
 
 Add the `statusLine` block to `~/.gemini/antigravity-cli/settings.json`:
 
@@ -68,9 +58,7 @@ Add the `statusLine` block to `~/.gemini/antigravity-cli/settings.json`:
 }
 ```
 
-*(If `agybar` is not in your `PATH`, use the full binary path such as `/path/to/agybar/bin/agybar`.)*
-
-Restart `agy`, and `agybar` will appear at the bottom of your terminal.
+*(If `agybar` is not in your `PATH`, use the full binary path such as `~/.local/bin/agybar`.)*
 
 ---
 
