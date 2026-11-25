@@ -79,6 +79,7 @@ func runPreview() {
 	demoNormal := &schema.Payload{
 		CWD:        "/Users/presence/code/github/agybar",
 		AgentState: "thinking",
+		CycleMode:  "auto",
 		Model: &schema.ModelInfo{
 			ID:          "gemini-4-neon",
 			DisplayName: "Gemini 4 Neon",
@@ -103,6 +104,7 @@ func runPreview() {
 	demoHigh := &schema.Payload{
 		CWD:        "/Users/presence/code/github/agybar",
 		AgentState: "tool_use",
+		CycleMode:  "plan",
 		Model: &schema.ModelInfo{
 			ID:          "claude-sonnet",
 			DisplayName: "Claude Sonnet",

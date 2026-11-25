@@ -32,7 +32,7 @@
 - **3 visual styles** — `minimal` (pure Unicode, works out of the box in any terminal), `badge` (universal colored badges, no Nerd Font required), and `pill` (rounded capsules for Nerd Font or iTerm2 built-in Powerline glyphs).
 - **3 gradient progress bar styles** — `blocks` (`▰▱`), `smooth` (`━╸─`), and `braille` (`⣿⣤⣀`) with semantic color transitions (`green → yellow → peach → red`, plus an automatic `→ /compact` hint at `≥90%`).
 - **Responsive layout** — Uses `terminal_width` to render 2 spacious lines on wide terminals and automatically collapse to 1 compact line on narrow panes (`<88` columns).
-- **Rich `agy` statusline data** — Model & effort level, context window usage & token counters (`↑in ↓out`), model quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, background tasks, artifacts, and sandbox indicator.
+- **Rich `agy` statusline data** — Model & effort level, context window usage & token counters (`↑in ↓out`), model quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, background tasks, artifacts, sandbox indicator, and execution mode (`plan` / `auto` / `accept-edits`).
 
 ---
 

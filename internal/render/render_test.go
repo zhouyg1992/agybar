@@ -348,3 +348,103 @@ func TestMinimalSeparators(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderCycleModeAtEndOfLine2(t *testing.T) {
+	t.Setenv("COLORTERM", "truecolor")
+	t.Setenv("TERM_PROGRAM", "iTerm.app")
+	t.Setenv("AGYBAR_COLOR", "")
+
+	pal := theme.Get("catppuccin")
+	cases := []struct {
+		mode     string
+		wantText string
+		wantCol  theme.RGB
+	}{
+		{mode: "plan", wantText: "❖ plan", wantCol: pal.Cyan},
+		{mode: "auto", wantText: "» auto", wantCol: pal.Good},
+		{mode: "accept-edits", wantText: "✎ accept-edits", wantCol: pal.Warn},
+		{mode: "accept_edits", wantText: "✎ accept-edits", wantCol: pal.Warn},
+		{mode: "default", wantText: "◇ default", wantCol: pal.Subtext},
+		{mode: "always-proceed", wantText: "⚠ always-proceed", wantCol: pal.High},
+		{mode: "custom", wantText: "◇ custom", wantCol: pal.Subtext},
+	}
+
+	for _, tc := range cases {
+		p := samplePayload(52, 120)
+		p.ArtifactCount = 2
+		p.Sandbox = &schema.SandboxInfo{Enabled: true}
+		p.CycleMode = tc.mode
+
+		wantRGB := fmt.Sprintf("38;2;%d;%d;%dm", tc.wantCol.R, tc.wantCol.G, tc.wantCol.B)
+		for _, st := range []string{"minimal", "badge", "pill"} {
+			cfg := config.Default()
+			cfg.Style = st
+
+			raw := Render(p, cfg)
+			if !strings.Contains(raw, wantRGB) {
+				t.Errorf("mode=%q style=%s missing RGB %s in %q", tc.mode, st, wantRGB, raw)
+			}
+
+			lines := strings.Split(stripANSI(raw), "\n")
+			if len(lines) != 2 {
+				t.Fatalf("mode=%q style=%s expected 2 lines, got %d: %q", tc.mode, st, len(lines), stripANSI(raw))
+			}
+
+			line2 := lines[1]
+			sandboxIdx := strings.LastIndex(line2, "⊘ sandbox")
+			modeIdx := strings.LastIndex(line2, tc.wantText)
+			if sandboxIdx < 0 || modeIdx <= sandboxIdx {
+				t.Errorf("mode=%q style=%s expected %q after sandbox on line 2, got: %q", tc.mode, st, tc.wantText, line2)
+			}
+			trimmed := strings.TrimRight(line2, " \ue0b4")
+			if !strings.HasSuffix(trimmed, tc.wantText) {
+				t.Errorf("mode=%q style=%s expected line 2 to end with %q, got: %q", tc.mode, st, tc.wantText, line2)
+			}
+		}
+	}
+}
+
+func TestRenderCycleModeEmptyAndCompact(t *testing.T) {
+	p := samplePayload(52, 120)
+	p.Sandbox = &schema.SandboxInfo{Enabled: true}
+	p.CycleMode = ""
+
+	for _, st := range []string{"minimal", "badge", "pill"} {
+		cfg := config.Default()
+		cfg.Style = st
+		lines := strings.Split(stripANSI(Render(p, cfg)), "\n")
+		if len(lines) != 2 {
+			t.Fatalf("style=%s expected 2 lines, got %d", st, len(lines))
+		}
+		trimmed := strings.TrimRight(lines[1], " \ue0b4")
+		if !strings.HasSuffix(trimmed, "⊘ sandbox") {
+			t.Errorf("style=%s empty cycle_mode should end with sandbox, got: %q", st, lines[1])
+		}
+	}
+
+	pNarrow := samplePayload(52, 72)
+	pNarrow.CycleMode = "plan"
+	for _, st := range []string{"minimal", "badge", "pill"} {
+		cfg := config.Default()
+		cfg.Style = st
+		out := stripANSI(Render(pNarrow, cfg))
+		if strings.Contains(out, "\n") {
+			t.Errorf("style=%s compact mode should stay 1 line, got: %q", st, out)
+		}
+		if strings.Contains(out, "❖ plan") {
+			t.Errorf("style=%s compact mode should omit cycle_mode, got: %q", st, out)
+		}
+	}
+
+	t.Setenv("TERM_PROGRAM", "Apple_Terminal")
+	t.Setenv("AGYBAR_COLOR", "")
+	pApple := samplePayload(52, 120)
+	pApple.CycleMode = "plan"
+	rawApple := Render(pApple, config.Default())
+	if strings.Contains(rawApple, "38;2;") || strings.Contains(rawApple, "48;2;") {
+		t.Errorf("Apple_Terminal output must not emit 24-bit SGR: %q", rawApple)
+	}
+	if !strings.Contains(stripANSI(rawApple), "❖ plan") {
+		t.Errorf("Apple_Terminal output missing mode label: %q", stripANSI(rawApple))
+	}
+}

@@ -1,6 +1,6 @@
 # agybar
 
-> agybar is a fast, aesthetic, zero-dependency Go statusline and real-time usage/quota bar for Google Antigravity CLI (`agy`). It reads the `agy` statusLine JSON payload from stdin—local process input, not network telemetry—and renders model & effort info, context window progress bars with semantic color gradients, token counts, 5h/7d quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, and sandbox indicators in milliseconds. agybar has no network or analytics code and never uploads or stores this data.
+> agybar is a fast, aesthetic, zero-dependency Go statusline and real-time usage/quota bar for Google Antigravity CLI (`agy`). It reads the `agy` statusLine JSON payload from stdin—local process input, not network telemetry—and renders model & effort info, context window progress bars with semantic color gradients, token counts, 5h/7d quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, sandbox indicators, and execution mode (`plan`/`auto`/`accept-edits`) in milliseconds. agybar has no network or analytics code and never uploads or stores this data.
 
 ## Installation
 
