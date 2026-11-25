@@ -11,7 +11,7 @@
 
 ## Features & CLI Commands
 
-- Themes (`agybar theme <name>`): `catppuccin` (default), `tokyo-night`, `nord`, `mono`.
+- Themes (`agybar theme <name>`): `catppuccin` (default), `tokyo-night`, `nord`, `gruvbox`, `rose-pine`, `everforest`, `mono`.
 - Styles (`agybar style <style>`): `minimal` (pure Unicode, works in any terminal), `badge` (universal colored badges), `pill` (Nerd Font rounded capsules).
 - Progress bars (`agybar bar <style>`): `blocks`, `smooth`, `braille`.
 - Separators (`agybar sep <preset|text>`): `pipe` (`│`), `dashed` (`┊`), `dot` (`•`), `square` (`▪`), `none` (blank), or custom text for `minimal` style.

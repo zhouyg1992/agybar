@@ -176,25 +176,18 @@ func runSetTheme(args []string) {
 		fmt.Printf("Available themes: %s\n", strings.Join(theme.Names(), ", "))
 		return
 	}
-	name := strings.ToLower(args[0])
-	valid := false
-	for _, n := range theme.Names() {
-		if n == name {
-			valid = true
-			break
-		}
-	}
-	if !valid {
-		fmt.Fprintf(os.Stderr, "Unknown theme %q. Available: %s\n", name, strings.Join(theme.Names(), ", "))
+	canonical, ok := theme.ResolveName(args[0])
+	if !ok {
+		fmt.Fprintf(os.Stderr, "Unknown theme %q. Available: %s\n", strings.TrimSpace(args[0]), strings.Join(theme.Names(), ", "))
 		os.Exit(1)
 	}
 	cfg := config.Load()
-	cfg.Theme = name
+	cfg.Theme = canonical
 	if err := config.Save(cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to save config: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Theme set to %s (%s)\n", name, config.Path())
+	fmt.Printf("Theme set to %s (%s)\n", canonical, config.Path())
 }
 
 func runSetStyle(args []string) {
@@ -292,7 +285,7 @@ func printHelp() {
 Usage:
   agybar                         Read agy statusLine JSON from stdin and render
   agybar preview                 Preview all themes, styles, and responsive layouts
-  agybar theme <name>            Switch theme (catppuccin | tokyo-night | nord | mono)
+  agybar theme <name>            Switch theme (%s)
   agybar style <minimal|badge|pill>  Switch visual style
   agybar bar <blocks|smooth|braille>  Switch progress bar style
   agybar sep <preset|text>       Switch minimal separator (pipe | dashed | dot | square | none | <custom>)
@@ -301,5 +294,5 @@ Usage:
 
 Debug:
   Set AGYBAR_DEBUG=1 to dump raw stdin JSON to /tmp/agybar-last-payload.json
-`, version)
+`, version, strings.Join(theme.Names(), " | "))
 }

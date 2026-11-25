@@ -28,7 +28,7 @@
 ## Features
 
 - **Zero dependencies, millisecond startup** — Single static Go binary; renders in a few milliseconds without slowing down `agy`.
-- **4 curated 24-bit TrueColor themes** — `catppuccin` (default), `tokyo-night`, `nord`, and `mono`.
+- **7 curated 24-bit TrueColor themes** — `catppuccin` (default), `tokyo-night`, `nord`, `gruvbox`, `rose-pine`, `everforest`, and `mono`.
 - **3 visual styles** — `minimal` (pure Unicode, works out of the box in any terminal), `badge` (universal colored badges, no Nerd Font required), and `pill` (rounded capsules for Nerd Font or iTerm2 built-in Powerline glyphs).
 - **3 gradient progress bar styles** — `blocks` (`▰▱`), `smooth` (`━╸─`), and `braille` (`⣿⣤⣀`) with semantic color transitions (`green → yellow → peach → red`, plus an automatic `→ /compact` hint at `≥90%`).
 - **Responsive layout** — Uses `terminal_width` to render 2 spacious lines on wide terminals and automatically collapse to 1 compact line on narrow panes (`<88` columns).
@@ -87,7 +87,7 @@ Add the `statusLine` block to `~/.gemini/antigravity-cli/settings.json`:
 | Command | Description |
 | :--- | :--- |
 | `agybar preview` | Preview all themes, high-usage warnings, compact mode, and pill style |
-| `agybar theme <name>` | Switch theme: `catppuccin`, `tokyo-night`, `nord`, `mono` |
+| `agybar theme <name>` | Switch theme: `catppuccin`, `tokyo-night`, `nord`, `gruvbox`, `rose-pine`, `everforest`, `mono` |
 | `agybar style <style>` | Switch style: `minimal` (default), `badge` (universal), or `pill` (Nerd Font / iTerm2 Powerline) |
 | `agybar bar <style>` | Switch progress bar: `blocks`, `smooth`, `braille` |
 | `agybar sep <preset\|text>` | Switch `minimal` separator: `pipe` (`│`), `dashed` (`┊`), `dot` (`•`), `square` (`▪`), `none` (blank), or custom text |

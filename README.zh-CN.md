@@ -28,7 +28,7 @@
 ## 核心特性
 
 - **零依赖、毫秒级启动** — 纯 Go 编译的单文件二进制，每次状态刷新仅需几毫秒，绝不卡顿 `agy`。
-- **4 套精选 24-bit TrueColor 主题** — `catppuccin`（默认）、`tokyo-night`、`nord`、`mono`。
+- **7 套精选 24-bit TrueColor 主题** — `catppuccin`（默认）、`tokyo-night`、`nord`、`gruvbox`、`rose-pine`、`everforest`、`mono`。
 - **3 种视觉风格** — `minimal`（纯 Unicode，无需特殊字体，任意终端开箱即美）、`badge`（通用纯色徽章，无需 Nerd Font）与 `pill`（圆角胶囊风格，需 Nerd Font 或 iTerm2 内置 Powerline）。
 - **3 种渐变进度条** — `blocks`（`▰▱`）、`smooth`（`━╸─`）、`braille`（`⣿⣤⣀`），随占比平滑变色（`绿 → 黄 → 橙 → 红`，超过 `90%` 自动提示 `→ /compact`）。
 - **真正的响应式布局** — 读取 `terminal_width`，宽屏优雅展示双行，窄屏（`<88` 列）自动折叠为紧凑单行，不换行炸版。
@@ -89,7 +89,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 | 命令 | 说明 |
 | :--- | :--- |
 | `agybar preview` | 在终端预览全部主题、高占用告警、窄屏模式与胶囊风格 |
-| `agybar theme <name>` | 切换主题：`catppuccin`、`tokyo-night`、`nord`、`mono` |
+| `agybar theme <name>` | 切换主题：`catppuccin`、`tokyo-night`、`nord`、`gruvbox`、`rose-pine`、`everforest`、`mono` |
 | `agybar style <style>` | 切换风格：`minimal`（默认）、`badge`（通用徽章）或 `pill`（需 Nerd Font / iTerm2 Powerline） |
 | `agybar bar <style>` | 切换进度条：`blocks`、`smooth`、`braille` |
 | `agybar sep <preset\|text>` | 切换 `minimal` 风格分隔符：`pipe`（`│`）、`dashed`（`┊`）、`dot`（`•`）、`square`（`▪`）、`none`（纯留白）或自定义字符 |

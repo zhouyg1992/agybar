@@ -8,7 +8,7 @@ import (
 
 // Config controls the appearance and enabled modules of agybar.
 type Config struct {
-	Theme      string `json:"theme"`       // catppuccin | tokyo-night | nord | mono
+	Theme      string `json:"theme"`       // catppuccin | tokyo-night | nord | gruvbox | rose-pine | everforest | mono
 	Style      string `json:"style"`       // minimal | badge | pill
 	BarStyle   string `json:"bar_style"`   // smooth | blocks | braille
 	Separator  string `json:"separator"`   // pipe | dashed | dot | square | none | <custom>
