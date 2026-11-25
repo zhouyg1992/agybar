@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Theme      string `json:"theme"`       // catppuccin | tokyo-night | nord | gruvbox | rose-pine | everforest | mono
 	Style      string `json:"style"`       // minimal | badge | pill
-	BarStyle   string `json:"bar_style"`   // smooth | blocks | braille
+	BarStyle   string `json:"bar_style"`   // blocks | smooth | braille | slider | dots | micro
 	Separator  string `json:"separator"`   // pipe | dashed | dot | square | none | <custom>
 	ShowTokens bool   `json:"show_tokens"` // show ↑in ↓out token counters
 	ShowQuota  bool   `json:"show_quota"`  // show model quota buckets
