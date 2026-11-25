@@ -30,7 +30,7 @@
 - **무의존성 & 밀리초 단위 실행** — 단일 정적 Go 바이너리로 `agy`의 반응 속도를 전혀 저하시키지 않습니다.
 - **엄선된 7가지 24-bit TrueColor 테마** — `catppuccin`(기본), `tokyo-night`, `nord`, `gruvbox`, `rose-pine`, `everforest`, `mono`.
 - **3가지 비주얼 스타일** — `minimal`(순수 유니코드로 모든 터미널에서 즉시 작동), `badge`(Nerd Font 없이도 작동하는 범용 컬러 배지), `pill`(Nerd Font / iTerm2 Powerline 둥근 캡슐 스타일).
-- **3가지 그라데이션 프로그레스 바** — `blocks`(`▰▱`), `smooth`(`━╸─`), `braille`(`⣿⣤⣀`). 사용량에 따라 색상이 자연스럽게 변하며 `90%` 이상일 때 자동으로 `→ /compact`를 안내합니다.
+- **6가지 그라데이션 프로그레스 바** — `blocks`(`▰`), `smooth`(`━╸─`), `braille`(`⣿⣤⣀`), `slider`(`──•──`), `dots`(`•`), `micro`(`▪`). 사용량에 따라 색상이 자연스럽게 변하며 `90%` 이상일 때 자동으로 `→ /compact`를 안내합니다.
 - **반응형 레이아웃** — `terminal_width`를 감지해 넓은 화면에서는 2줄, 좁은 창(`<88` 컬럼)에서는 자동으로 1줄 컴팩트 모드로 축소됩니다.
 - **풍부한 `agy` 상태 표시줄 정보** — 모델 및 추론 강도, 컨텍스트 사용률 및 토큰 카운트(`↑in ↓out`), 모델별 쿼터 잔량 및 리셋 카운트다운, 에이전트 상태, Git 브랜치, 서브에이전트 수, 백그라운드 작업, 샌드박스 및 실행 모드(`plan` / `auto` / `accept-edits`) 표시.
 
@@ -86,7 +86,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 agybar preview             # 모든 테마, 경고 표시, 컴팩트 모드, pill 스타일 미리보기
 agybar theme tokyo-night   # 테마 변경 (catppuccin | tokyo-night | nord | gruvbox | rose-pine | everforest | mono)
 agybar style badge          # 스타일 변경 (minimal | badge | pill)
-agybar bar smooth          # 프로그레스 바 변경 (blocks | smooth | braille)
+agybar bar slider          # 프로그레스 바 변경 (blocks | smooth | braille | slider | dots | micro)
 agybar sep dot             # 구분자 변경 (pipe | dashed | dot | square | none | <custom>)
 agybar config              # 현재 설정 확인
 ```
