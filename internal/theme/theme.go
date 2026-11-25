@@ -91,19 +91,73 @@ var presets = map[string]Palette{
 		High:      RGB{250, 179, 135},
 		Crit:      RGB{243, 139, 168},
 	},
+	"gruvbox": {
+		Name:      "gruvbox",
+		Text:      RGB{235, 219, 178}, // fg1
+		Subtext:   RGB{189, 174, 147}, // fg3
+		Muted:     RGB{124, 111, 100}, // bg4
+		Surface:   RGB{60, 56, 54},    // bg1
+		SurfaceHi: RGB{80, 73, 69},    // bg2
+		Accent:    RGB{254, 128, 25},  // orange
+		Accent2:   RGB{131, 165, 152}, // blue
+		Cyan:      RGB{142, 192, 124}, // aqua
+		Good:      RGB{184, 187, 38},  // green
+		Warn:      RGB{250, 189, 47},  // yellow
+		High:      RGB{254, 128, 25},  // orange
+		Crit:      RGB{251, 73, 52},   // red
+	},
+	"rose-pine": {
+		Name:      "rose-pine",
+		Text:      RGB{224, 222, 244}, // Text
+		Subtext:   RGB{144, 140, 170}, // Subtle
+		Muted:     RGB{110, 106, 134}, // Muted
+		Surface:   RGB{38, 35, 58},    // Overlay
+		SurfaceHi: RGB{64, 61, 82},    // Highlight Med
+		Accent:    RGB{235, 188, 186}, // Rose
+		Accent2:   RGB{196, 167, 231}, // Iris
+		Cyan:      RGB{156, 207, 216}, // Foam
+		Good:      RGB{126, 196, 166}, // Sage green
+		Warn:      RGB{246, 193, 119}, // Gold
+		High:      RGB{234, 154, 151}, // Rose coral
+		Crit:      RGB{235, 111, 146}, // Love
+	},
+	"everforest": {
+		Name:      "everforest",
+		Text:      RGB{211, 198, 170}, // fg
+		Subtext:   RGB{157, 169, 160}, // grey2
+		Muted:     RGB{122, 132, 120}, // grey0
+		Surface:   RGB{52, 63, 68},    // bg2
+		SurfaceHi: RGB{67, 79, 85},    // bg4
+		Accent:    RGB{167, 192, 128}, // green
+		Accent2:   RGB{127, 187, 179}, // blue
+		Cyan:      RGB{131, 192, 146}, // aqua
+		Good:      RGB{167, 192, 128}, // green
+		Warn:      RGB{219, 188, 127}, // yellow
+		High:      RGB{230, 152, 117}, // orange
+		Crit:      RGB{230, 126, 128}, // red
+	},
+}
+
+// ResolveName normalizes a theme name to its canonical built-in theme name.
+func ResolveName(name string) (string, bool) {
+	key := strings.ToLower(strings.TrimSpace(name))
+	if _, ok := presets[key]; ok {
+		return key, true
+	}
+	return "", false
 }
 
 // Get returns the named palette, defaulting to catppuccin if unknown.
 func Get(name string) Palette {
-	if p, ok := presets[strings.ToLower(strings.TrimSpace(name))]; ok {
-		return p
+	if canonical, ok := ResolveName(name); ok {
+		return presets[canonical]
 	}
 	return presets["catppuccin"]
 }
 
 // Names returns all built-in theme names in display order.
 func Names() []string {
-	return []string{"catppuccin", "tokyo-night", "nord", "mono"}
+	return []string{"catppuccin", "tokyo-night", "nord", "gruvbox", "rose-pine", "everforest", "mono"}
 }
 
 // UsageColor picks a semantic color based on used percentage [0, 100].

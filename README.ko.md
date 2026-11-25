@@ -28,7 +28,7 @@
 ## 주요 기능
 
 - **무의존성 & 밀리초 단위 실행** — 단일 정적 Go 바이너리로 `agy`의 반응 속도를 전혀 저하시키지 않습니다.
-- **엄선된 4가지 24-bit TrueColor 테마** — `catppuccin`(기본), `tokyo-night`, `nord`, `mono`.
+- **엄선된 7가지 24-bit TrueColor 테마** — `catppuccin`(기본), `tokyo-night`, `nord`, `gruvbox`, `rose-pine`, `everforest`, `mono`.
 - **3가지 비주얼 스타일** — `minimal`(순수 유니코드로 모든 터미널에서 즉시 작동), `badge`(Nerd Font 없이도 작동하는 범용 컬러 배지), `pill`(Nerd Font / iTerm2 Powerline 둥근 캡슐 스타일).
 - **3가지 그라데이션 프로그레스 바** — `blocks`(`▰▱`), `smooth`(`━╸─`), `braille`(`⣿⣤⣀`). 사용량에 따라 색상이 자연스럽게 변하며 `90%` 이상일 때 자동으로 `→ /compact`를 안내합니다.
 - **반응형 레이아웃** — `terminal_width`를 감지해 넓은 화면에서는 2줄, 좁은 창(`<88` 컬럼)에서는 자동으로 1줄 컴팩트 모드로 축소됩니다.
@@ -84,7 +84,7 @@ go install github.com/zhouyg1992/agybar/cmd/agybar@latest
 
 ```bash
 agybar preview             # 모든 테마, 경고 표시, 컴팩트 모드, pill 스타일 미리보기
-agybar theme tokyo-night   # 테마 변경 (catppuccin | tokyo-night | nord | mono)
+agybar theme tokyo-night   # 테마 변경 (catppuccin | tokyo-night | nord | gruvbox | rose-pine | everforest | mono)
 agybar style badge          # 스타일 변경 (minimal | badge | pill)
 agybar bar smooth          # 프로그레스 바 변경 (blocks | smooth | braille)
 agybar sep dot             # 구분자 변경 (pipe | dashed | dot | square | none | <custom>)
