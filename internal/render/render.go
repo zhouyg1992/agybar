@@ -69,10 +69,13 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 		if st := formatState(p.AgentState, pal, true); st != "" {
 			line1 = append(line1, st)
 		}
+		if mode := formatCycleMode(p.CycleMode, pal, true); mode != "" {
+			line1 = append(line1, mode)
+		}
 		return " " + strings.Join(line1, sep)
 	}
 
-	// --- Line 2: State + VCS + Workspace + Subagents/Tasks/Sandbox ---
+	// --- Line 2: State + VCS + Workspace + Subagents/Tasks/Sandbox + Mode ---
 	var line2 []string
 
 	if st := formatState(p.AgentState, pal, false); st != "" {
@@ -95,6 +98,9 @@ func renderMinimal(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 	}
 	if p.Sandbox != nil && p.Sandbox.Enabled {
 		line2 = append(line2, fg(pal.Subtext, "⊘ sandbox"))
+	}
+	if mode := formatCycleMode(p.CycleMode, pal, false); mode != "" {
+		line2 = append(line2, mode)
 	}
 
 	out1 := " " + strings.Join(line1, sep)
@@ -188,6 +194,9 @@ func renderCapsule(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 		if st := formatState(p.AgentState, pal, true); st != "" {
 			line1 = append(line1, st)
 		}
+		if mode := formatCycleMode(p.CycleMode, pal, true); mode != "" {
+			line1 = append(line1, mode)
+		}
 		return " " + strings.Join(line1, " ")
 	}
 
@@ -217,6 +226,9 @@ func renderCapsule(p *schema.Payload, cfg config.Config, pal theme.Palette, comp
 	}
 	if p.Sandbox != nil && p.Sandbox.Enabled {
 		line2 = append(line2, pill(pal.Surface, pal.Subtext, "⊘ sandbox", rounded))
+	}
+	if icon, label, col, ok := cycleModeSpec(p.CycleMode, pal, false); ok {
+		line2 = append(line2, pill(pal.Surface, col, icon+" "+label, rounded))
 	}
 
 	out1 := " " + strings.Join(line1, " ")
@@ -457,6 +469,43 @@ func formatSubagents(p *schema.Payload, pal theme.Palette) string {
 		label = "agents"
 	}
 	return fg(pal.Accent, fmt.Sprintf("⬡ %d %s", n, label))
+}
+
+func cycleModeSpec(mode string, pal theme.Palette, compact bool) (icon, label string, col theme.RGB, ok bool) {
+	raw := strings.ToLower(strings.TrimSpace(mode))
+	if raw == "" {
+		return "", "", theme.RGB{}, false
+	}
+	norm := strings.NewReplacer("_", "-", " ", "-").Replace(raw)
+	switch norm {
+	case "plan":
+		return "❖", "plan", pal.Cyan, true
+	case "auto":
+		return "»", "auto", pal.Good, true
+	case "accept-edits":
+		if compact {
+			return "✎", "edits", pal.Warn, true
+		}
+		return "✎", "accept-edits", pal.Warn, true
+	case "default":
+		if compact {
+			return "", "", theme.RGB{}, false
+		}
+		return "◇", "default", pal.Subtext, true
+	default:
+		if strings.Contains(norm, "bypass") || strings.Contains(norm, "yolo") || strings.Contains(norm, "always") {
+			return "⚠", norm, pal.High, true
+		}
+		return "◇", norm, pal.Subtext, true
+	}
+}
+
+func formatCycleMode(mode string, pal theme.Palette, compact bool) string {
+	icon, label, col, ok := cycleModeSpec(mode, pal, compact)
+	if !ok {
+		return ""
+	}
+	return fg(col, icon+" "+label)
 }
 
 func shortEffort(e string) string {
