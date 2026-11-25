@@ -422,17 +422,39 @@ func TestRenderCycleModeEmptyAndCompact(t *testing.T) {
 		}
 	}
 
-	pNarrow := samplePayload(52, 72)
-	pNarrow.CycleMode = "plan"
-	for _, st := range []string{"minimal", "badge", "pill"} {
-		cfg := config.Default()
-		cfg.Style = st
-		out := stripANSI(Render(pNarrow, cfg))
-		if strings.Contains(out, "\n") {
-			t.Errorf("style=%s compact mode should stay 1 line, got: %q", st, out)
-		}
-		if strings.Contains(out, "❖ plan") {
-			t.Errorf("style=%s compact mode should omit cycle_mode, got: %q", st, out)
+	compactCases := []struct {
+		mode      string
+		wantText  string
+		omitTexts []string
+	}{
+		{mode: "plan", wantText: "❖ plan"},
+		{mode: "auto", wantText: "» auto"},
+		{mode: "accept-edits", wantText: "✎ edits", omitTexts: []string{"accept-edits"}},
+		{mode: "default", omitTexts: []string{"default", "◇"}},
+	}
+
+	for _, tc := range compactCases {
+		pNarrow := samplePayload(52, 72)
+		pNarrow.CycleMode = tc.mode
+		for _, st := range []string{"minimal", "badge", "pill"} {
+			cfg := config.Default()
+			cfg.Style = st
+			out := stripANSI(Render(pNarrow, cfg))
+			if strings.Contains(out, "\n") {
+				t.Errorf("mode=%q style=%s compact mode should stay 1 line, got: %q", tc.mode, st, out)
+			}
+			if tc.wantText != "" {
+				dotIdx := strings.Index(out, "◉")
+				modeIdx := strings.Index(out, tc.wantText)
+				if dotIdx < 0 || modeIdx <= dotIdx {
+					t.Errorf("mode=%q style=%s compact mode expected %q after ◉, got: %q", tc.mode, st, tc.wantText, out)
+				}
+			}
+			for _, omit := range tc.omitTexts {
+				if strings.Contains(out, omit) {
+					t.Errorf("mode=%q style=%s compact mode should omit %q, got: %q", tc.mode, st, omit, out)
+				}
+			}
 		}
 	}
 
