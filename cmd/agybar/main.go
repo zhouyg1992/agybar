@@ -169,6 +169,18 @@ func runPreview() {
 		fmt.Println(render.Render(demoNormal, sepCfg))
 	}
 	fmt.Println()
+
+	fmt.Printf("\x1b[2m── progress bar styles · theme: %s ──\x1b[0m\n", cfg.Theme)
+	pal := theme.Get(cfg.Theme)
+	for _, bs := range render.BarStyleNames() {
+		fmt.Printf("  %-8s %s 4%%   %s 52%%   %s 93%%\n",
+			bs,
+			render.ProgressBar(4, 10, bs, pal),
+			render.ProgressBar(52, 10, bs, pal),
+			render.ProgressBar(93, 10, bs, pal),
+		)
+	}
+	fmt.Println()
 }
 
 func runSetTheme(args []string) {
@@ -211,12 +223,12 @@ func runSetStyle(args []string) {
 
 func runSetBar(args []string) {
 	if len(args) == 0 {
-		fmt.Println("Available bar styles: blocks, smooth, braille")
+		fmt.Printf("Available bar styles: %s\n", strings.Join(render.BarStyleNames(), ", "))
 		return
 	}
-	bs := strings.ToLower(args[0])
-	if bs != "blocks" && bs != "smooth" && bs != "braille" {
-		fmt.Fprintf(os.Stderr, "Unknown bar style %q. Available: blocks, smooth, braille\n", bs)
+	bs, ok := render.ResolveBarStyle(args[0])
+	if !ok {
+		fmt.Fprintf(os.Stderr, "Unknown bar style %q. Available: %s\n", strings.TrimSpace(args[0]), strings.Join(render.BarStyleNames(), ", "))
 		os.Exit(1)
 	}
 	cfg := config.Load()
@@ -287,12 +299,12 @@ Usage:
   agybar preview                 Preview all themes, styles, and responsive layouts
   agybar theme <name>            Switch theme (%s)
   agybar style <minimal|badge|pill>  Switch visual style
-  agybar bar <blocks|smooth|braille>  Switch progress bar style
+  agybar bar <%s>  Switch progress bar style
   agybar sep <preset|text>       Switch minimal separator (pipe | dashed | dot | square | none | <custom>)
   agybar config                  Show active configuration
   agybar version                 Print version
 
 Debug:
   Set AGYBAR_DEBUG=1 to dump raw stdin JSON to /tmp/agybar-last-payload.json
-`, version, strings.Join(theme.Names(), " | "))
+`, version, strings.Join(theme.Names(), " | "), strings.Join(render.BarStyleNames(), "|"))
 }
