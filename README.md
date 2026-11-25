@@ -34,8 +34,6 @@
 - **Responsive layout** — Uses `terminal_width` to render 2 spacious lines on wide terminals and automatically collapse to 1 compact line on narrow panes (`<88` columns).
 - **Rich `agy` statusline data** — Model & effort level, context window usage & token counters (`↑in ↓out`), model quota buckets with reset countdowns, agent state, Git branch/dirty status, active subagents, background tasks, artifacts, and sandbox indicator.
 
-> **About “telemetry”**: this refers to the JSON status payload that `agy` writes to the statusLine command’s stdin on each refresh. It is local process input. agybar has no network or analytics code and never uploads or stores this data. Fields such as `session_id` and `email` are parsed for compatibility only and are neither rendered nor transmitted.
-
 ---
 
 ## Installation
